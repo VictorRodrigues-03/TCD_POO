@@ -17,38 +17,6 @@ public class Restaurante implements Serializable{
         ArrayList<Pedido> listaPedidos = carregarPedidos();
         ArrayList<Ingrediente> listaIngredientes = carregarIngredientes();
         Scanner sc = new Scanner(System.in);
-        if (restaurante.fimDoMes(obterDataAtual())){
-            int totalP = 0;
-            System.out.println("DIA DE PAGAMENTO");
-            for (Pedido element : listaPedidos){
-                if (element.isPago()){
-                    restaurante.lucro(element.getValorTotal());
-                    totalP++;
-                }
-            }
-            if (totalP >= restaurante.getBonusP()){
-                for (Funcionario element : listaFuncionarios){
-                    if (element instanceof Garcon){
-                        Garcon garcon = (Garcon) element;
-                        restaurante.gasto(garcon.calculaSalario(true));
-                    }else if (element instanceof Cozinheiro){
-                        Cozinheiro cozin = (Cozinheiro) element;
-                        restaurante.gasto(cozin.calcSalario());
-                    }
-                }
-            }else {
-                for (Funcionario element : listaFuncionarios){
-                    if (element instanceof Garcon){
-                        Garcon garcon = (Garcon) element;
-                        restaurante.gasto(garcon.calculaSalario(false));
-                    }else if (element instanceof Cozinheiro){
-                        Cozinheiro cozin = (Cozinheiro) element;
-                        restaurante.gasto(cozin.calcSalario());
-                    }
-                }
-            }
-            listaPedidos.clear();
-        }
         while (program) {
             System.out.println("Bem Vindo ao restaurante Comp em Tudo");
             System.out.println("1 - Gerenciar funcionarios");
@@ -83,16 +51,15 @@ public class Restaurante implements Serializable{
                         System.out.println("A lista de ingredientes, ou produtos, ou funcionarios esta vazia");
                         break;
                     }
-                    gerenciarPedidos(listaPedidos,listaFuncionarios,listaProdutos);
+                    gerenciarPedidos(listaPedidos,listaFuncionarios,listaProdutos,restaurante);
                     break;
                 case 5:
-                    System.out.println("Escolha o dia de Pagamento do mês: ");
-                    int dia = sc.nextInt();
-                    sc.nextLine();
+                    System.out.println("Escolha o dia de Pagamento do mês(Com os dois digitos): ");
+                    String dia = sc.nextLine();
                     System.out.println("Digite a quantidade de Pedidos para ter Bonus");
                     int bonus = sc.nextInt();
                     sc.nextLine();
-                    restaurante.setRestaurante(String.valueOf(dia),bonus);
+                    restaurante.setRestaurante(dia,bonus);
                     break;
                 case 6:
                     program = false;
@@ -101,7 +68,7 @@ public class Restaurante implements Serializable{
                     break;
             }
         }
-
+        restaurante.getContas(listaPedidos,listaFuncionarios);
         salvarIngredientes(listaIngredientes);
         salvarRestaurante(restaurante);
         salvarPedidos(listaPedidos);
@@ -170,6 +137,7 @@ public class Restaurante implements Serializable{
                 }
                 return;
             case 2:
+                if (funcionarios.isEmpty()) return;
                 percorreFuncinarios(funcionarios);
                 do {
                     System.out.println("Escolha o funcinario a ser excluido: ");
@@ -184,6 +152,7 @@ public class Restaurante implements Serializable{
                 percorreFuncinarios(funcionarios);
                 return;
             case 3:
+                if (funcionarios.isEmpty()) return;
                 percorreFuncinarios(funcionarios);
                 do {
                     System.out.println("Escolha um COZINHEIRO: ");
@@ -192,20 +161,22 @@ public class Restaurante implements Serializable{
                     if (op < funcionarios.size() && op >= 0){
                         if (funcionarios.get(op) instanceof Cozinheiro){
                             Cozinheiro cozin = (Cozinheiro) funcionarios.get(op);
-                            System.out.println("O cozinheiro "+cozin.getNome()+"faz os seguintes pratos: ");
+                            System.out.println("O cozinheiro "+cozin.getNome()+" faz os seguintes pratos: ");
                             cozin.getPratos();
                             System.out.println("----------------------------------------------");
                             break;
                         }
                     }
                 }while (true);
+                int Op2;
                 do {
                     System.out.println("Escolha um PRATO PRINCIPAL ou uma SOBREMESA: ");
-                    op = escolheProdutos(produtos);
-                    if (produtos.get(op) instanceof PratoPrincipal || produtos.get(op) instanceof Sobremesa){
+                    Op2 = escolheProdutos(produtos);
+                    if (produtos.get(Op2) instanceof PratoPrincipal || produtos.get(Op2) instanceof Sobremesa){
                         break;
                     }
                 }while (true);
+                ((Cozinheiro) funcionarios.get(op)).adicionarPratos((PratoPrincipal) produtos.get(Op2));
                 return;
             default:
                 System.out.println("----Gerenciamento de funcinarios----");
@@ -310,11 +281,13 @@ public class Restaurante implements Serializable{
                 }
             case 2:
                 int i;
+                if (produtos.isEmpty()) return;
                 i = escolheProdutos(produtos);
                 produtos.remove(i);
                 System.out.println("Produto removido com sucesso");
                 return;
             case 3:
+                if (produtos.isEmpty()) return;
                 int prato;
                 do {
                     System.out.println("Escolha um PRATO PRINCIPAL ou uma SOBREMESA: ");
@@ -356,6 +329,7 @@ public class Restaurante implements Serializable{
         sc.nextLine();
         switch (op){
             case 1:
+                if (listaIngredientes.isEmpty()) return;
                 System.out.println("Escolha o produto que deseja diminuir a quantidade");
                 indice = escolheIngredientes(listaIngredientes);
                 System.out.println("Digite a quantidade que deseja diminuir: ");
@@ -367,6 +341,7 @@ public class Restaurante implements Serializable{
                 System.out.println("Quantidade reduzida com sucesso");
                 return;
             case 2:
+                if (listaIngredientes.isEmpty()) return;
                 System.out.println("Escolha o produto que deseja aumentar a quantidade");
                 indice = escolheIngredientes(listaIngredientes);
                 System.out.println("Digite a quantidade que deseja aumentar: ");
@@ -388,6 +363,7 @@ public class Restaurante implements Serializable{
                 System.out.println("Novo ingrediente adicionado com sucesso");
                 return;
             case 4:
+                if (listaIngredientes.isEmpty()) return;
                 System.out.println("Escolha o ingrediente que deseja remover");
                 indice = escolheIngredientes(listaIngredientes);
                 listaIngredientes.remove(indice);
@@ -441,7 +417,7 @@ public class Restaurante implements Serializable{
 
     }
 
-    public static void gerenciarPedidos(ArrayList<Pedido> listaPedidos, ArrayList<Funcionario> listaFuncionarios, ArrayList<Produto> listaProdutos){
+    public static void gerenciarPedidos(ArrayList<Pedido> listaPedidos, ArrayList<Funcionario> listaFuncionarios, ArrayList<Produto> listaProdutos, Restaurante res){
         Scanner sc = new Scanner(System.in);
         int op;
         int pedido;
@@ -456,6 +432,18 @@ public class Restaurante implements Serializable{
                 iniciarPedido(listaPedidos,listaFuncionarios);
                 return;
             case 2:
+                if (listaPedidos.isEmpty()) return;
+                int total = listaPedidos.size();
+                int pagos = 0;
+                for (Pedido element : listaPedidos){
+                    if (element.isPago()){
+                        pagos++;
+                    }
+                }
+                if (pagos == total){
+                    System.out.println("Não existe nenhum pedido em andamento");
+                    return;
+                }
                 pedido = escolhePedidos(listaPedidos);
                 int produto = escolheProdutos(listaProdutos);
                 System.out.println("Quantos itens deseja do Produto escolhido: ");
@@ -475,6 +463,7 @@ public class Restaurante implements Serializable{
                 System.out.println("Pedido realizado com Sucesso!!");
                 return;
             case 3:
+                if (listaPedidos.isEmpty()) return;
                 pedido = escolhePedidos(listaPedidos);
                 listaPedidos.get(pedido).getNota();
                 while (true){
@@ -485,9 +474,11 @@ public class Restaurante implements Serializable{
                     sc.nextLine();
                     if (listaPedidos.get(pedido).pagamento(vP,formaP,obterHorarioAtual())){
                         System.out.println("Pedidos pago com sucesso!!!");
+                        res.lucro(listaPedidos.get(pedido).getValorTotal());
                         return;
                     }
                     System.out.println("Pague o resto do valor da conta");
+                    System.out.println(listaPedidos.get(pedido).getValor());
                 }
             default:
                 System.out.println("----Menu de Pedidos----");
@@ -635,12 +626,50 @@ public class Restaurante implements Serializable{
         return false;
     }
 
+    public void getContas(ArrayList<Pedido> listaPedidos, ArrayList<Funcionario> listaFuncionarios){
+        if (fimDoMes(obterDataAtual())){
+            if (listaPedidos.isEmpty()) return;
+            int totalP = 0;
+            System.out.println("DIA DE PAGAMENTO");
+            for (Pedido element : listaPedidos){
+                if (element.isPago()){
+                    totalP++;
+                }
+            }
+            if (totalP >= this.getBonusP()){
+                for (Funcionario element : listaFuncionarios){
+                    if (element instanceof Garcon){
+                        Garcon garcon = (Garcon) element;
+                        this.gasto(garcon.calculaSalario(true));
+                    }else if (element instanceof Cozinheiro){
+                        Cozinheiro cozin = (Cozinheiro) element;
+                        this.gasto(cozin.calcSalario());
+                    }
+                }
+            }else {
+                for (Funcionario element : listaFuncionarios){
+                    if (element instanceof Garcon){
+                        Garcon garcon = (Garcon) element;
+                        this.gasto(garcon.calculaSalario(false));
+                    }else if (element instanceof Cozinheiro){
+                        Cozinheiro cozin = (Cozinheiro) element;
+                        this.gasto(cozin.calcSalario());
+                    }
+                }
+            }
+            listaPedidos.clear();
+            return;
+        }
+        System.out.println("DATA: "+obterDataAtual());
+        System.out.println("HORA: "+obterHorarioAtual());
+        return;
+    }
 
-    public void lucro(double valor){
+    private void lucro(double valor){
         this.Saldo += valor;
     }
 
-    public void gasto(double valor){
+    private void gasto(double valor){
         this.Saldo -= valor;
     }
 

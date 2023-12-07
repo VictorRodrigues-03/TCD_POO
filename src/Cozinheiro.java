@@ -1,8 +1,7 @@
 import java.util.ArrayList;
 
 public class Cozinheiro extends Funcionario{
-    ArrayList<PratoPrincipal> pratos = new ArrayList<PratoPrincipal>();
-
+    ArrayList<PratoPrincipal> pratos;
     private int quantPrato;
     private int quantSobremesa;
 
@@ -26,7 +25,8 @@ public class Cozinheiro extends Funcionario{
 
     public Cozinheiro(PratoPrincipal prato,String nome, String cpf){
         super(nome, cpf);
-        adicionarPratos(prato);
+        pratos = new ArrayList<PratoPrincipal>();
+        pratos.add(prato);
         quantSobremesa = 0;
         quantPrato = 0;
     }
@@ -35,6 +35,7 @@ public class Cozinheiro extends Funcionario{
         int i = 0;
         for (PratoPrincipal element : pratos){
             System.out.println(i +" - "+element.getNome());
+            i++;
         }
         return;
     }

@@ -20,6 +20,10 @@ public abstract class Produto implements Serializable {
         return copia;
     }
 
+    public String getCodigo(){
+        return this.codigo;
+    }
+
     @Override
     public boolean equals(Object o){
         if (this == o) return true;

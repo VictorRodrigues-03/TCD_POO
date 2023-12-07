@@ -4,15 +4,15 @@ import java.util.ArrayList;
 public class Pedido implements Serializable {
 
     private boolean pago;
-    private String nome = "";
-    private String dataPedido = "";
-    private String horaPedido = "";
-    private String horaPagamento = "";
+    private String nome;
+    private String dataPedido;
+    private String horaPedido;
+    private String horaPagamento;
     private double valorTotal;
-    private String formaPagamento = "";
-    private ArrayList<Item> itens = new ArrayList<Item>();
-    private Garcon atendenteG = new Garcon();
-    private Cozinheiro atendenteC = new Cozinheiro();
+    private String formaPagamento;
+    private ArrayList<Item> itens;
+    private Garcon atendenteG;
+    private Cozinheiro atendenteC;
 
     public Pedido(Cozinheiro atendenteC, Garcon atendenteG, String dataPedido, String horaPedido, String nome){
         this.nome = nome;
@@ -20,6 +20,8 @@ public class Pedido implements Serializable {
         this.atendenteG = atendenteG;
         this.dataPedido = dataPedido;
         this.horaPedido = horaPedido;
+        itens = new ArrayList<Item>();
+        this.formaPagamento = "";
         pago = false;
     }
 
@@ -41,6 +43,10 @@ public class Pedido implements Serializable {
         return valorTotal;
     }
 
+    public double getValor(){
+        return this.valorTotal;
+    }
+
     public void getNota(){
         System.out.println("Restaurante Comp em Tudo");
         System.out.println("--------------------------");
@@ -57,6 +63,11 @@ public class Pedido implements Serializable {
         }
         System.out.println("----------------------------------------");
         System.out.println("Valor Total: "+getValorTotal());
+        if (this.pago){
+            System.out.println("Horario Pagamento: "+horaPagamento);
+            System.out.println("Forma Pagamento: "+formaPagamento);
+            System.out.println("Pedido pago!!!");
+        }
     }
 
     public String getNome(){
@@ -74,23 +85,21 @@ public class Pedido implements Serializable {
         if (atendenteC.pratos.contains(prato)){
             return true;
         }
+        System.out.println("Falso aqui");
         return false;
     }
     public boolean isPago(){
-        if (pago){
-            return true;
-        }
-        return false;
+        return pago;
     }
 
     public boolean pagamento(double vP, String formaP, String horaP){
         if (vP == valorTotal){
-            this.formaPagamento.concat(formaP);
+            this.formaPagamento += formaP;
             pago = true;
             horaPagamento = horaP;
             return true;
         }
-        this.formaPagamento.concat(formaP+"+");
+        this.formaPagamento += formaP+"+";
         valorTotal -= vP;
         return false;
     }

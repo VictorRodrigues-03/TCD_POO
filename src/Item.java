@@ -27,7 +27,7 @@ public class Item implements Quantitativo, Serializable {
     }
 
     public void getItem(){
-        System.out.println(produto.getNome() +" - "+quantidade+" - "+getValor());
+        System.out.println(produto.getNome() +" - "+quantidade+" - R$"+getValor());
     }
 
     @Override

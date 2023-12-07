@@ -1,13 +1,14 @@
 import java.util.ArrayList;
 
 public class PratoPrincipal extends Produto{
-    protected ArrayList<Ingrediente> ingredientes = new ArrayList<Ingrediente>();
+    protected ArrayList<Ingrediente> ingredientes;
     protected String descricaoC;
     protected double tempoP;
 
     public PratoPrincipal(String nome, double precoC, String codigo,double tempoP){
         super(nome,precoC,codigo);
         this.tempoP = tempoP;
+        ingredientes = new ArrayList<Ingrediente>();
     }
 
     public void adicionarIngrediente(Ingrediente ad){
