@@ -41,7 +41,10 @@ public class Cozinheiro extends Funcionario{
     }
 
     public double calcSalario(){
+<<<<<<< HEAD
 
+=======
+>>>>>>> f5296425fafab2419e13ffe0c7a5f18455d870b3
         return (quantPrato*15)+(quantSobremesa*8);
     }
 
