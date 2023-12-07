@@ -640,7 +640,7 @@ public class Restaurante implements Serializable{
                 for (Funcionario element : listaFuncionarios){
                     if (element instanceof Garcon){
                         Garcon garcon = (Garcon) element;
-                        this.gasto(garcon.calculaSalario(true));
+                        this.gasto(garcon.calcSalario(true));
                     }else if (element instanceof Cozinheiro){
                         Cozinheiro cozin = (Cozinheiro) element;
                         this.gasto(cozin.calcSalario());
@@ -650,7 +650,7 @@ public class Restaurante implements Serializable{
                 for (Funcionario element : listaFuncionarios){
                     if (element instanceof Garcon){
                         Garcon garcon = (Garcon) element;
-                        this.gasto(garcon.calculaSalario(false));
+                        this.gasto(garcon.calcSalario(false));
                     }else if (element instanceof Cozinheiro){
                         Cozinheiro cozin = (Cozinheiro) element;
                         this.gasto(cozin.calcSalario());

@@ -1,5 +1,4 @@
 public class Garcon extends Funcionario{
-    private double salarioBase;
     private String diaFolga;
 
     public Garcon(){
@@ -8,14 +7,14 @@ public class Garcon extends Funcionario{
 
     public Garcon(String nome, String cpf,double salarioBase){
         super(nome,cpf);
-        this.salarioBase = salarioBase;
+        this.salario = salarioBase;
     }
 
-    public double calculaSalario(boolean bonus){
+    public double calcSalario(boolean bonus){
         if (bonus){
-            return salarioBase+500;
+            return salario+500;
         }
-        return salarioBase;
+        return salario;
     }
 
 }
