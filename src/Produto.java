@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class Produto {
+public abstract class Produto implements Serializable {
     protected String nome;
     protected String codigo;
     protected double precoV;

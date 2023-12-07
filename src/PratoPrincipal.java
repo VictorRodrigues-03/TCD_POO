@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class PratoPrincipal extends Produto{
-    ArrayList<Ingrediente> ingredientes;
+    protected ArrayList<Ingrediente> ingredientes = new ArrayList<Ingrediente>();
     protected String descricaoC;
     protected double tempoP;
 
@@ -14,11 +14,17 @@ public class PratoPrincipal extends Produto{
         ingredientes.add(ad);
     }
 
-    public double fazerPrato(){
+    public void getIngredientes(){
+        for (Ingrediente element : ingredientes){
+            System.out.println(element.getNome());
+        }
+    }
+
+    public void fazerPrato(){
         for (Ingrediente el : ingredientes){
             el.diminuirQ();
         }
-        return precoV;
+        return;
     }
 
 }

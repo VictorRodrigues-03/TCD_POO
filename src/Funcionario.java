@@ -1,4 +1,6 @@
-public abstract class Funcionario {
+import java.io.Serializable;
+
+public abstract class Funcionario implements Serializable {
     protected String nome;
     protected String cpf;
     protected String rg;
@@ -6,6 +8,7 @@ public abstract class Funcionario {
     protected String endereco;
     protected String nCarteiraT;
     protected String dataAdmissao;
+    protected double salario;
 
     public Funcionario(String nome, String cpf){
         this.nome = nome;
